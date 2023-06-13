@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RecipAI</string>
+
+    <!-- Bottom Nav -->
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
+    <string name="settings">Settings</string>
+
+</resources>

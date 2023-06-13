@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.libraries.ui'
+    compileSdk Config.compileSdk
+
+    defaultConfig {
+        minSdkVersion(Config.minSdk)
+        targetSdkVersion(Config.targetSdk)
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = Config.kotlinCompilerExtensionVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlin {
+        jvmToolchain(17)
+    }
+}
+
+dependencies {
+    // Jetpack Compose
+    def composeBom = platform(JetpackCompose.bom)
+    implementation composeBom
+    androidTestImplementation composeBom
+
+    implementation(JetpackCompose.animation)
+    implementation(JetpackCompose.material)
+    implementation(JetpackCompose.iconsCore)
+    implementation(JetpackCompose.runtime)
+    implementation(JetpackCompose.ui)
+    implementation(JetpackCompose.uiPreview)
+    debugImplementation(JetpackCompose.uiTooling)
+}
