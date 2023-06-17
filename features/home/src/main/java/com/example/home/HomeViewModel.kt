@@ -9,10 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.data.Recipe
 import com.example.core.extension.daysInWeek
-import com.example.core.mocks.RecipeMocks
 import com.example.core.repo.AiRepo
-import com.example.home.bottomSheets.BottomSheetContent
-import com.example.home.bottomSheets.BottomSheetContent.*
+import com.example.home.bottomSheets.BottomSheetContentState
+import com.example.home.bottomSheets.BottomSheetContentState.Error
+import com.example.home.bottomSheets.BottomSheetContentState.Loading
+import com.example.home.bottomSheets.BottomSheetContentState.None
+import com.example.home.bottomSheets.BottomSheetContentState.RecipeGenerationEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,22 +32,19 @@ class HomeViewModel @Inject constructor(
     var dashboardState by mutableStateOf<DashboardViewState>(DashboardViewState.Loading)
     private var week = clock.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.daysInWeek
 
-    var bottomSheetContent by mutableStateOf<BottomSheetContent>(None)
+    var bottomSheetContentState by mutableStateOf<BottomSheetContentState>(None)
+
+    init {
+        loadData()
+    }
 
     private fun loadData() = viewModelScope.launch {
         val today = clock.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
-//        val recipesForWeek: SnapshotStateList<RecipeForDayState> = week.map {
-//            RecipeForDayState.Loaded(
-//                recipe = null,
-//                date = it
-//            )
-//        }.toMutableStateList()
-
-        val recipesForWeek: SnapshotStateList<RecipeForDay> = week.mapIndexed { index, date ->
+        val recipesForWeek: SnapshotStateList<RecipeForDay> = week.map {
             RecipeForDay(
-                recipe = RecipeMocks.recipeForWeeks[index],
-                date = date
+                recipe = null,
+                date = it
             )
         }.toMutableStateList()
 
@@ -73,23 +72,30 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun generateRecipeFromLink(url: String, dayIndex: Int) = viewModelScope.launch(Dispatchers.IO) {
-        bottomSheetContent = Loading
+    fun generateRecipeFromLink(url: String, date: LocalDate) = viewModelScope.launch(Dispatchers.IO) {
+        bottomSheetContentState = Loading
         aiRepo.requestRecipeFromLink(url)
             .onSuccess {
-                bottomSheetContent = RecipeGenerationEntry.Loaded(it)
+                bottomSheetContentState = RecipeGenerationEntry.Loaded(
+                    recipe = it,
+                    date = date
+                )
             }
             .onFailure {
-                bottomSheetContent = Error
+                bottomSheetContentState = Error
             }
     }
 
-    fun setBottomSheetState(state: BottomSheetContent) {
-        bottomSheetContent = state
+    fun saveRecipe(recipe: Recipe, date: LocalDate) {
+        (dashboardState as DashboardViewState.Loaded).let {
+            val dayIndex = date.dayOfWeek.value
+            it.recipesForWeek[dayIndex] = RecipeForDay(recipe, it.recipesForWeek[dayIndex].date)
+            it.cuisines[dayIndex] = date to recipe.cuisine
+        }
     }
 
-    init {
-        loadData()
+    fun setBottomSheetState(state: BottomSheetContentState) {
+        bottomSheetContentState = state
     }
 }
 

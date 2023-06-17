@@ -48,6 +48,7 @@ dependencies {
     implementation(JetpackCompose.animation)
     implementation(JetpackCompose.material)
     implementation(JetpackCompose.iconsCore)
+    implementation(JetpackCompose.iconsExtended)
     implementation(JetpackCompose.runtime)
     implementation(JetpackCompose.ui)
     implementation(JetpackCompose.uiPreview)

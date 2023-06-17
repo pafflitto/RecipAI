@@ -33,7 +33,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material.icons.rounded.LockClock
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Summarize
 import androidx.compose.material3.ButtonDefaults
@@ -55,8 +54,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -66,7 +63,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.core.data.Ingredient
 import com.example.core.data.Recipe
-import com.example.home.bottomSheets.BottomSheetContent
 import com.features.home.R
 import kotlin.math.absoluteValue
 
@@ -271,9 +267,7 @@ private fun IngredientChip(
     ) {
         if (it) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
     }
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Text(
         modifier = Modifier
             .padding(vertical = 8.dp)
             .clip(RoundedCornerShape(8.dp))
@@ -284,35 +278,9 @@ private fun IngredientChip(
                 shape = RoundedCornerShape(8.dp)
             )
             .background(backgroundColor)
-            .height(IntrinsicSize.Min)
-            .animateContentSize()
-    ) {
-        AnimatedVisibility(
-            visible = ingredient.inPantry.value,
-            enter = expandHorizontally(
-                animationSpec = tween(durationMillis = 400)
-            ),
-            exit = shrinkHorizontally(
-                animationSpec = tween(durationMillis = 400)
-            )
-        ) {
-            CheckIcon()
-        }
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = ingredient.description,
-            color = textColor,
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
+            .padding(8.dp),
+        text = ingredient.description,
+        color = textColor,
+        style = MaterialTheme.typography.bodyLarge
+    )
 }
-
-@Composable
-private fun CheckIcon() = Icon(
-    modifier = Modifier
-        .padding(start = 6.dp)
-        .size(20.dp),
-    imageVector = Icons.Rounded.Done,
-    contentDescription = null,
-    tint = MaterialTheme.colorScheme.onPrimary
-)

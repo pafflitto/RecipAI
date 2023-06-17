@@ -4,9 +4,12 @@
     <string name="ingredients">Ingredients</string>
     <string name="instructions">Instructions</string>
     <string name="add_recipe">Add A Recipe</string>
-    <string name="generate">Generate</string>
     <string name="paste_link">Paste a Link</string>
     <string name="create_a_prompt">Create a Prompt</string>
     <string name="prep_time">Prep %dm</string>
     <string name="cook_time">Cook %dm</string>
+
+    <!-- Bottom Sheets -->
+    <string name="generate">Generate</string>
+    <string name="save">Save</string>
 </resources>

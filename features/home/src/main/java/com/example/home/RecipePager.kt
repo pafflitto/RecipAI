@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.home.bottomSheets.BottomSheetContent
+import com.example.home.bottomSheets.BottomSheetContentState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -30,7 +30,7 @@ fun RecipePager(
     toggleIngredientStock: (UpdateIngredientParams) -> Unit,
     pageChange: (Int) -> Unit,
     openBottomSheet: () -> Unit,
-    setBottomSheetContent: (BottomSheetContent) -> Unit
+    setBottomSheetContent: (BottomSheetContentState) -> Unit
 
 ) {
     val state = rememberPagerState(selectedPage)
@@ -47,8 +47,8 @@ fun RecipePager(
             launch {
                 val recipeForDay = recipesForWeek[it]
                 recipeForDay.recipe?.let { recipe ->
-                    setBottomSheetContent(BottomSheetContent.Instructions(recipe.instructions))
-                } ?: setBottomSheetContent(BottomSheetContent.Loading)
+                    setBottomSheetContent(BottomSheetContentState.Instructions(recipe.instructions))
+                } ?: setBottomSheetContent(BottomSheetContentState.Loading)
             }
         }
     }
@@ -76,8 +76,12 @@ fun RecipePager(
             )
         } else {
             AddRecipeCard(
-                dayIndex = page,
+                date = recipeState.date,
                 selected = selectedPage == page,
+                openBottomSheet = {
+                    setBottomSheetContent(it)
+                    openBottomSheet()
+                }
             )
         }
     }

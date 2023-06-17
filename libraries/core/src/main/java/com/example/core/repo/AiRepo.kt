@@ -28,7 +28,7 @@ class AiRepoImpl(
 
     override suspend fun requestRecipeFromLink(url: String): Result<Recipe> {
         val prompt = createUrlPrompt(url)
-        return sendRequest(prompt)
+        return sendRequest(prompt, 0f)
     }
 
     private fun createUrlPrompt(
@@ -42,6 +42,7 @@ class AiRepoImpl(
 
         return MessagePrompt
             .newBuilder()
+            .setContext("Your an API that only returns a JSON response and you follow the JSON syntax very strictly")
             .addMessages(message)
             .addExamples(urlExample)
             .build()
@@ -49,19 +50,20 @@ class AiRepoImpl(
 
     private fun sendRequest(
         prompt: MessagePrompt,
+        temp: Float
     ): Result<Recipe> {
         val request = GenerateMessageRequest
             .newBuilder()
             .setModel(aiModel)
             .setPrompt(prompt)
-            .setTemperature(0.24f)
+            .setTemperature(temp)
             .setCandidateCount(1)
             .build()
 
         return try {
             Log.e("AiRepo", prompt.messagesList.first().content)
             val response = client.generateMessage(request)
-            val returnedMessage = response.candidatesList.last().content
+            val returnedMessage = response.candidatesList.first().content
             Log.e("AiRepo", returnedMessage)
             val jsonStartIndex = returnedMessage.indexOfFirst { it == '{' }
             val jsonEndIndex = returnedMessage.indexOfLast { it == '}' }
@@ -82,7 +84,7 @@ class AiRepoImpl(
         private const val aiModel = "models/chat-bison-001"
         private fun getUrlInputPrompt(url: String) = Message
             .newBuilder()
-            .setContent("Generate a JSON response using this schema ${AiExamples.jsonSchema} and using this link for the recipe: $url. Do not have any trailing commas.")
+            .setContent("Format the details of the recipe from this link $url in JSON format.")
             .build()
 
         private val urlExample = Example

@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun InstructionsBottomSheet(
-    state: BottomSheetContent.Instructions
+    state: BottomSheetContentState.Instructions
 ) {
     val listState = rememberLazyListState()
     val firstVisibleItemIndex = remember { derivedStateOf { listState.firstVisibleItemIndex } }

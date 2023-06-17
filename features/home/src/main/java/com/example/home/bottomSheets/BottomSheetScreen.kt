@@ -18,36 +18,42 @@ fun BottomSheetScreen(
     closeBottomSheet: () -> Unit
 ) {
     AnimatedContent(
-        targetState = viewModel.bottomSheetContent
+        targetState = viewModel.bottomSheetContentState
     ) { state ->
         when (state) {
-            is BottomSheetContent.RecipeGenerationEntry -> {
+            is BottomSheetContentState.RecipeGenerationEntry -> {
                 when(state) {
-                    is BottomSheetContent.RecipeGenerationEntry.PasteLink -> PasteLinkBottomSheet(
-                        dayIndex = state.dayIndex,
+                    is BottomSheetContentState.RecipeGenerationEntry.PasteLink -> PasteLinkBottomSheet(
+                        date = state.date,
                         closeBottomSheet = closeBottomSheet,
                         generateLink = viewModel::generateRecipeFromLink
                     )
 
-                    is BottomSheetContent.RecipeGenerationEntry.Loaded -> {
-                        PendingRecipeScreen(recipe = state.recipe)
+                    is BottomSheetContentState.RecipeGenerationEntry.Loaded -> {
+                        PendingRecipeScreen(
+                            recipe = state.recipe,
+                            closeBottomSheet = {
+                                viewModel.saveRecipe(it, state.date)
+                                closeBottomSheet()
+                            }
+                        )
                     }
 
-                    is BottomSheetContent.None -> { }
+                    is BottomSheetContentState.None -> { }
                 }
             }
-            is BottomSheetContent.Instructions -> {
+            is BottomSheetContentState.Instructions -> {
                 InstructionsBottomSheet(state = state)
             }
-            BottomSheetContent.Error -> {
+            BottomSheetContentState.Error -> {
                 Text("error")
             }
-            BottomSheetContent.Loading -> {
+            BottomSheetContentState.Loading -> {
                 Box(Modifier.fillMaxSize()) {
                     CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
             }
-            BottomSheetContent.None -> { }
+            BottomSheetContentState.None -> { }
         }
     }
 }

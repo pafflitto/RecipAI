@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.home.bottomSheets.BottomSheetContent
+import com.example.home.bottomSheets.BottomSheetContentState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -50,7 +50,7 @@ fun HomeScreen(
 fun RecipeSection(
     state: DashboardViewState.Loaded,
     toggleIngredientStock: (UpdateIngredientParams) -> Unit,
-    setBottomSheetContent: (BottomSheetContent) -> Unit,
+    setBottomSheetContent: (BottomSheetContentState) -> Unit,
     openBottomSheet: () -> Unit
 ) {
     val itemWidths = remember { mutableStateListOf(0, 0, 0, 0, 0, 0, 0) }

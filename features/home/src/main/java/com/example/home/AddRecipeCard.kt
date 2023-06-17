@@ -23,15 +23,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.home.bottomSheets.BottomSheetContent
+import com.example.home.bottomSheets.BottomSheetContentState
 import com.example.ui.components.bounceClick
 import com.features.home.R
+import kotlinx.datetime.LocalDate
 
 @Composable
 fun AddRecipeCard(
-    dayIndex: Int,
+    date: LocalDate,
     selected: Boolean,
-    openBottomSheet: (BottomSheetContent) -> Unit = { }
+    openBottomSheet: (BottomSheetContentState) -> Unit = { }
 ) {
     Column {
         PageHeader(
@@ -52,11 +53,12 @@ fun AddRecipeCard(
             ) {
                 PasteLinkButton(
                     modifier = buttonModifier,
-                    dayIndex = dayIndex
+                    date = date,
+                    openBottomSheet = openBottomSheet
                 )
                 CreatePromptButton(
                     modifier = buttonModifier,
-                    dayIndex = dayIndex
+                    date = date
                 )
             }
             Row(
@@ -72,21 +74,21 @@ fun AddRecipeCard(
 @Composable
 private fun PasteLinkButton(
     modifier: Modifier,
-    dayIndex: Int,
-    openBottomSheet: (BottomSheetContent) -> Unit = { }
+    date: LocalDate,
+    openBottomSheet: (BottomSheetContentState) -> Unit = { }
 ) = GenerateRecipeButton(
     modifier = modifier,
     title = stringResource(id = R.string.paste_link),
     icon = Icons.Rounded.ContentPaste
 ) {
-    openBottomSheet(BottomSheetContent.RecipeGenerationEntry.PasteLink(dayIndex))
+    openBottomSheet(BottomSheetContentState.RecipeGenerationEntry.PasteLink(date))
 }
 
 @Composable
 private fun CreatePromptButton(
     modifier: Modifier,
-    dayIndex: Int,
-    openBottomSheet: (BottomSheetContent) -> Unit = { }
+    date: LocalDate,
+    openBottomSheet: (BottomSheetContentState) -> Unit = { }
 ) = GenerateRecipeButton(
     modifier = modifier,
     title = stringResource(id = R.string.create_a_prompt),
