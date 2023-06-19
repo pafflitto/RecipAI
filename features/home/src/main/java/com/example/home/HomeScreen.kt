@@ -26,7 +26,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    openBottomSheet: () -> Unit
+    openBottomSheet: () -> Unit,
+    closeBottomSheet: () -> Unit
 ) {
     AnimatedContent(
         targetState = viewModel.dashboardState,
@@ -39,7 +40,8 @@ fun HomeScreen(
                     state = targetState,
                     toggleIngredientStock = viewModel::toggleIngredientInPantry,
                     setBottomSheetContent = viewModel::setBottomSheetState,
-                    openBottomSheet = openBottomSheet
+                    openBottomSheet = openBottomSheet,
+                    closeBottomSheet = closeBottomSheet
                 )
             }
         }
@@ -51,7 +53,8 @@ fun RecipeSection(
     state: DashboardViewState.Loaded,
     toggleIngredientStock: (UpdateIngredientParams) -> Unit,
     setBottomSheetContent: (BottomSheetContentState) -> Unit,
-    openBottomSheet: () -> Unit
+    openBottomSheet: () -> Unit,
+    closeBottomSheet: () -> Unit
 ) {
     val itemWidths = remember { mutableStateListOf(0, 0, 0, 0, 0, 0, 0) }
     val listState = rememberLazyListState(state.todaysIndex)
@@ -84,6 +87,7 @@ fun RecipeSection(
             recipesForWeek = state.recipesForWeek,
             toggleIngredientStock = toggleIngredientStock,
             pageChange = {
+                closeBottomSheet()
                 moveItemToCenter(it, itemWidths[it])
             },
             openBottomSheet = openBottomSheet,

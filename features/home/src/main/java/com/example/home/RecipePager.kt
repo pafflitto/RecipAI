@@ -13,12 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.home.bottomSheets.BottomSheetContentState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -33,6 +35,7 @@ fun RecipePager(
     setBottomSheetContent: (BottomSheetContentState) -> Unit
 
 ) {
+    val scope = rememberCoroutineScope()
     val state = rememberPagerState(selectedPage)
 
     LaunchedEffect(selectedPage) {
@@ -48,7 +51,7 @@ fun RecipePager(
                 val recipeForDay = recipesForWeek[it]
                 recipeForDay.recipe?.let { recipe ->
                     setBottomSheetContent(BottomSheetContentState.Instructions(recipe.instructions))
-                } ?: setBottomSheetContent(BottomSheetContentState.Loading)
+                } ?: setBottomSheetContent(BottomSheetContentState.None)
             }
         }
     }
@@ -79,8 +82,11 @@ fun RecipePager(
                 date = recipeState.date,
                 selected = selectedPage == page,
                 openBottomSheet = {
-                    setBottomSheetContent(it)
-                    openBottomSheet()
+                    scope.launch {
+                        setBottomSheetContent(it)
+                        delay(100)
+                        openBottomSheet()
+                    }
                 }
             )
         }

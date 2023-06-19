@@ -73,6 +73,9 @@ class MainActivity : ComponentActivity() {
                             viewModel = viewModel,
                             openBottomSheet = {
                                 openBottomSheet()
+                            },
+                            closeBottomSheet = {
+                                closeBottomSheet()
                             }
                         )
                     }
