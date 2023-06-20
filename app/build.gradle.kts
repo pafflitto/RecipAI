@@ -78,6 +78,9 @@ dependencies {
     implementation(JetpackCompose.uiPreview)
     debugImplementation(JetpackCompose.uiTooling)
 
+    // Accompanist
+    implementation(Accompanist.systemUiController)
+
     implementation(Hilt.hilt)
     kapt(Hilt.compiler)
 }

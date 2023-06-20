@@ -1,3 +1,6 @@
+object Accompanist {
+    const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:0.30.1"
+}
 object AndroidX {
     const val coreKtx = "androidx.core:core-ktx:1.10.0"
     const val appCompat = "androidx.appcompat:appcompat:1.6.1"

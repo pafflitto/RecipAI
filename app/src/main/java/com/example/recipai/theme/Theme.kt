@@ -5,6 +5,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -79,6 +82,15 @@ fun RecipAiTheme(
         LightColors
     } else {
         DarkColors
+    }
+
+    val uiController = rememberSystemUiController()
+    SideEffect {
+        uiController.setSystemBarsColor(
+            color = Color.Transparent,
+            darkIcons = !useDarkTheme
+        )
+        uiController.isNavigationBarVisible = false
     }
 
     MaterialTheme(
