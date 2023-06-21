@@ -20,7 +20,7 @@ fun RecipeResponse.toRecipe() = Recipe(
     cuisine = cuisine,
     ingredients = ingredients.map {
         Ingredient(
-            description = it,
+            description = it
         )
     },
     instructions = instructions,

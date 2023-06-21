@@ -3,7 +3,8 @@ package com.example.home.bottomSheets
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,8 +23,8 @@ fun BottomSheetScreen(
     ) { state ->
         when (state) {
             is BottomSheetContentState.RecipeGenerationEntry -> {
-                when(state) {
-                    is BottomSheetContentState.RecipeGenerationEntry.PasteLink -> PasteLinkBottomSheet(
+                when (state) {
+                    is BottomSheetContentState.RecipeGenerationEntry.PasteLink -> PasteRecipeBottomSheet(
                         date = state.date,
                         closeBottomSheet = closeBottomSheet,
                         generateLink = viewModel::generateRecipeFromLink
@@ -49,7 +50,7 @@ fun BottomSheetScreen(
                 Text("error")
             }
             BottomSheetContentState.Loading -> {
-                Box(Modifier.fillMaxSize()) {
+                Box(Modifier.fillMaxWidth().fillMaxHeight(0.4f)) {
                     CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
             }

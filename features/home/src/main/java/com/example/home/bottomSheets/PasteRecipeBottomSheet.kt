@@ -5,11 +5,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedback
@@ -17,50 +25,65 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.ui.components.AlertDialogWithNavColor
 import com.example.ui.components.BottomSheetPrimaryButton
-import com.example.ui.components.ScrollingText
 import com.features.home.R
 import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalDate
 
 @Composable
-fun PasteLinkBottomSheet(
+fun PasteRecipeBottomSheet(
     date: LocalDate,
     closeBottomSheet: () -> Unit,
-    generateLink: (url: String, date: LocalDate) -> Unit
+    generateLink: (text: String, date: LocalDate) -> Unit
 ) {
     val clipManager = LocalClipboardManager.current
-    val url = clipManager.getText()?.text
+    val text = clipManager.getText()?.text
 
     VibrateLaunchedEffect(
         hapticManager = LocalHapticFeedback.current,
-        hasText = url != null
+        hasText = text != null
     )
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 24.dp),
+            .padding(bottom = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (url != null) {
-            ScrollingText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                text = url,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        if (text != null) {
+            var showDialog by remember { mutableStateOf(false) }
+            if (showDialog) {
+                AlertDialogWithNavColor(
+                    confirmButton = stringResource(id = R.string.close),
+                    onDismissRequest = { showDialog = false },
+                    text = {
+                        Text(
+                            modifier = Modifier.verticalScroll(
+                                state = rememberScrollState()
+                            ),
+                            text = text
+                        )
+                    }
+                )
+            }
+            TextButton(
+                onClick = { showDialog = true }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.view_copied_recipe),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
             BottomSheetPrimaryButton(
                 text = stringResource(id = R.string.generate),
                 icon = Icons.Rounded.Link,
                 onClick = {
-                    generateLink(url, date)
+                    generateLink(text, date)
                 }
             )
         }

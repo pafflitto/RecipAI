@@ -1,13 +1,9 @@
 package com.example.home
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,7 +13,6 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,14 +20,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Summarize
 import androidx.compose.material3.ButtonDefaults
@@ -72,7 +65,7 @@ fun RecipePage(
     pageOffset: Float,
     recipe: Recipe,
     toggleRecipeInStock: (Int) -> Unit,
-    showInstructions: () -> Unit,
+    showInstructions: () -> Unit
 ) {
     val animatedOffset by animateFloatAsState(targetValue = pageOffset)
 
@@ -100,9 +93,8 @@ private fun InteractionCards(
     recipe: Recipe,
     modifier: Modifier,
     toggleRecipeInStock: (Int) -> Unit,
-    showInstructions: () -> Unit,
+    showInstructions: () -> Unit
 ) {
-
     var instructionsButtonHeight by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
 
@@ -115,7 +107,7 @@ private fun InteractionCards(
         alpha = 1 - (pageOffset.absoluteValue * 1.7f),
         elevation = CardDefaults.elevatedCardElevation(
             defaultElevation = 8.dp
-        ),
+        )
     ) {
         FlowRow(
             modifier = Modifier

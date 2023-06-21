@@ -14,7 +14,7 @@ class PressedIndication(
 ) : Indication {
 
     private inner class PressedIndication(
-        private val isPressed: State<Boolean>,
+        private val isPressed: State<Boolean>
     ) : IndicationInstance {
 
         override fun ContentDrawScope.drawIndication() {

@@ -90,7 +90,6 @@ fun RecipAiTheme(
             color = Color.Transparent,
             darkIcons = !useDarkTheme
         )
-        uiController.isNavigationBarVisible = false
     }
 
     MaterialTheme(

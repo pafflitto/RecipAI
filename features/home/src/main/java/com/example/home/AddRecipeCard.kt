@@ -78,7 +78,7 @@ private fun PasteLinkButton(
     openBottomSheet: (BottomSheetContentState) -> Unit = { }
 ) = GenerateRecipeButton(
     modifier = modifier,
-    title = stringResource(id = R.string.paste_link),
+    title = stringResource(id = R.string.paste_recipe),
     icon = Icons.Rounded.ContentPaste
 ) {
     openBottomSheet(BottomSheetContentState.RecipeGenerationEntry.PasteLink(date))

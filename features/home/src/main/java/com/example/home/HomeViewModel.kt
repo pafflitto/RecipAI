@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
         dashboardState = DashboardViewState.Loaded(
             recipesForWeek = recipesForWeek,
             cuisines = cuisinesForWeek,
-            todaysIndex = todaysIndex,
+            todaysIndex = todaysIndex
         )
     }
 
@@ -114,6 +114,6 @@ sealed class DashboardViewState {
     data class Loaded(
         val recipesForWeek: SnapshotStateList<RecipeForDay>,
         val cuisines: SnapshotStateList<Pair<LocalDate, String?>>,
-        val todaysIndex: Int,
+        val todaysIndex: Int
     ) : DashboardViewState()
 }

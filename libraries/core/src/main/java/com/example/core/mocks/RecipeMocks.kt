@@ -10,16 +10,16 @@ object RecipeMocks {
             cuisine = "American",
             ingredients = listOf(
                 Ingredient(
-                    description = "Burger Buns",
+                    description = "Burger Buns"
                 ),
                 Ingredient(
-                    description = "2lbs Ground Beef",
+                    description = "2lbs Ground Beef"
                 ),
                 Ingredient(
-                    description = "Chimichurri Sauce",
+                    description = "Chimichurri Sauce"
                 ),
                 Ingredient(
-                    description = "Provolone Cheese",
+                    description = "Provolone Cheese"
                 )
             ),
             instructions = listOf(
@@ -48,124 +48,124 @@ object RecipeMocks {
             cuisine = "Italian",
             ingredients = listOf(
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 ),
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 ),
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 ),
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 ),
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 ),
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 ),
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 ),
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 ),
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 ),
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "1 Cup of Red Wine",
+                    description = "1 Cup of Red Wine"
                 )
             ),
             instructions = listOf(
@@ -194,16 +194,16 @@ object RecipeMocks {
             cuisine = "Mexican",
             ingredients = listOf(
                 Ingredient(
-                    description = "4 Shredded Chicken Breasts",
+                    description = "4 Shredded Chicken Breasts"
                 ),
                 Ingredient(
-                    description = "Tortillas",
+                    description = "Tortillas"
                 ),
                 Ingredient(
-                    description = "1 Cup of Rice",
+                    description = "1 Cup of Rice"
                 ),
                 Ingredient(
-                    description = "1 Avocado",
+                    description = "1 Avocado"
                 )
             ),
             instructions = listOf(
@@ -232,16 +232,16 @@ object RecipeMocks {
             cuisine = "Mediterranean",
             ingredients = listOf(
                 Ingredient(
-                    description = "1/2 Pound of Lamb Meat",
+                    description = "1/2 Pound of Lamb Meat"
                 ),
                 Ingredient(
-                    description = "Pita",
+                    description = "Pita"
                 ),
                 Ingredient(
-                    description = "Tzatziki Sauce",
+                    description = "Tzatziki Sauce"
                 ),
                 Ingredient(
-                    description = "Chopped Onions",
+                    description = "Chopped Onions"
                 )
             ),
             instructions = listOf(
@@ -271,16 +271,16 @@ object RecipeMocks {
             cuisine = "Japanese",
             ingredients = listOf(
                 Ingredient(
-                    description = "Sushi Rice",
+                    description = "Sushi Rice"
                 ),
                 Ingredient(
-                    description = "Tuna",
+                    description = "Tuna"
                 ),
                 Ingredient(
-                    description = "Soy Sauce",
+                    description = "Soy Sauce"
                 ),
                 Ingredient(
-                    description = "Pack of Seaweed",
+                    description = "Pack of Seaweed"
                 )
             ),
             cookTimeMinutes = 30,
@@ -309,16 +309,16 @@ object RecipeMocks {
             cuisine = "Italian",
             ingredients = listOf(
                 Ingredient(
-                    description = "Pasta",
+                    description = "Pasta"
                 ),
                 Ingredient(
-                    description = "2 Tomatoes",
+                    description = "2 Tomatoes"
                 ),
                 Ingredient(
-                    description = "3 Cloves Garlic",
+                    description = "3 Cloves Garlic"
                 ),
                 Ingredient(
-                    description = "Breaded Chicken",
+                    description = "Breaded Chicken"
                 )
             ),
             instructions = listOf(
