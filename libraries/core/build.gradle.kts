@@ -56,6 +56,12 @@ dependencies {
     androidTestImplementation(AndroidX.junitTest)
     androidTestImplementation(AndroidX.espresso)
 
+    // Room
+    implementation(AndroidX.roomRuntime)
+    annotationProcessor(AndroidX.roomCompiler)
+    kapt(AndroidX.roomCompiler)
+    implementation(AndroidX.roomKtx)
+
     // Jetpack Compose
     val composeBom = platform(JetpackCompose.bom)
     implementation(composeBom)

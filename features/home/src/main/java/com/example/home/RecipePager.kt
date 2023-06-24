@@ -19,22 +19,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.core.data.Recipe
 import com.example.home.bottomSheets.BottomSheetContentState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecipePager(
+    dashboardState: DashboardViewState.Loaded,
     modifier: Modifier,
     selectedPage: Int,
-    recipesForWeek: List<RecipeForDay>,
     toggleIngredientStock: (UpdateIngredientParams) -> Unit,
     pageChange: (Int) -> Unit,
     openBottomSheet: () -> Unit,
     setBottomSheetContent: (BottomSheetContentState) -> Unit
 
 ) {
+    val recipesForWeek = dashboardState.recipesForWeek
     val scope = rememberCoroutineScope()
     val state = rememberPagerState(selectedPage)
 
@@ -63,13 +66,14 @@ fun RecipePager(
         pageSpacing = 16.dp,
         beyondBoundsPageCount = 1
     ) { page ->
-        val recipeState = recipesForWeek[page]
+        val recipeForDay = recipesForWeek[page]
         val pageOffset = state.calculateCurrentOffsetForPage(page)
-        if (recipeState.recipe != null) {
+        val recipe = recipeForDay.recipe
+        if (recipe != null) {
             RecipePage(
                 selected = selectedPage == page,
                 pageOffset = pageOffset,
-                recipe = recipeState.recipe,
+                recipe = recipe,
                 toggleRecipeInStock = {
                     toggleIngredientStock(
                         UpdateIngredientParams(page, it)
@@ -79,7 +83,7 @@ fun RecipePager(
             )
         } else {
             AddRecipeCard(
-                date = recipeState.date,
+                date = recipeForDay.date,
                 selected = selectedPage == page,
                 openBottomSheet = {
                     scope.launch {

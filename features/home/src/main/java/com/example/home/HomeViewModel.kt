@@ -8,16 +8,16 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.data.Recipe
-import com.example.core.extension.daysInWeek
+import com.example.core.data.RecipeForDay
+import com.example.core.extension.launchInBackground
 import com.example.core.repo.AiRepo
+import com.example.core.repo.RecipeRepo
 import com.example.home.bottomSheets.BottomSheetContentState
 import com.example.home.bottomSheets.BottomSheetContentState.Error
 import com.example.home.bottomSheets.BottomSheetContentState.Loading
 import com.example.home.bottomSheets.BottomSheetContentState.None
 import com.example.home.bottomSheets.BottomSheetContentState.RecipeGenerationEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -27,10 +27,10 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val aiRepo: AiRepo,
+    private val recipeRepo: RecipeRepo,
     private val clock: Clock
 ) : ViewModel() {
     var dashboardState by mutableStateOf<DashboardViewState>(DashboardViewState.Loading)
-    private var week = clock.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.daysInWeek
 
     var bottomSheetContentState by mutableStateOf<BottomSheetContentState>(None)
 
@@ -38,15 +38,10 @@ class HomeViewModel @Inject constructor(
         loadData()
     }
 
-    private fun loadData() = viewModelScope.launch {
+    private fun loadData() = viewModelScope.launchInBackground {
         val today = clock.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
-        val recipesForWeek: SnapshotStateList<RecipeForDay> = week.map {
-            RecipeForDay(
-                recipe = null,
-                date = it
-            )
-        }.toMutableStateList()
+        val recipesForWeek: SnapshotStateList<RecipeForDay> = recipeRepo.getRecipesForWeek(today).toMutableStateList()
 
         val cuisinesForWeek = recipesForWeek.map {
             it.date to it.recipe?.cuisine
@@ -56,23 +51,18 @@ class HomeViewModel @Inject constructor(
         dashboardState = DashboardViewState.Loaded(
             recipesForWeek = recipesForWeek,
             cuisines = cuisinesForWeek,
-            todaysIndex = todaysIndex
+            todaysIndex = todaysIndex,
         )
     }
 
-    fun toggleIngredientInPantry(toggleParams: UpdateIngredientParams) = viewModelScope.launch {
+    fun toggleIngredientInPantry(toggleParams: UpdateIngredientParams) = viewModelScope.launchInBackground {
         val loadedState = dashboardState as DashboardViewState.Loaded
-        val recipeForDay = loadedState.recipesForWeek[toggleParams.recipeIndex]
-        val ingredients = recipeForDay.recipe?.ingredients?.toMutableList()
-
-        if (ingredients != null) {
-            ingredients[toggleParams.ingredientIndex].let {
-                it.inPantry.value = !it.inPantry.value
-            }
+        loadedState.recipesForWeek[toggleParams.recipeIndex].recipe?.ingredients?.get(toggleParams.ingredientIndex)?.let {
+            it.inPantry.value = !it.inPantry.value
         }
     }
 
-    fun generateRecipeFromLink(url: String, date: LocalDate) = viewModelScope.launch(Dispatchers.IO) {
+    fun generateRecipeFromLink(url: String, date: LocalDate) = viewModelScope.launchInBackground {
         bottomSheetContentState = Loading
         aiRepo.requestRecipeFromLink(url)
             .onSuccess {
@@ -89,8 +79,12 @@ class HomeViewModel @Inject constructor(
     fun saveRecipe(recipe: Recipe, date: LocalDate) {
         (dashboardState as DashboardViewState.Loaded).let {
             val dayIndex = date.dayOfWeek.value
-            it.recipesForWeek[dayIndex] = RecipeForDay(recipe, it.recipesForWeek[dayIndex].date)
+            it.recipesForWeek[dayIndex] = RecipeForDay(it.recipesForWeek[dayIndex].date, recipe)
             it.cuisines[dayIndex] = date to recipe.cuisine
+        }
+
+        viewModelScope.launchInBackground {
+            recipeRepo.saveRecipeForDay(recipe, date)
         }
     }
 
@@ -104,16 +98,11 @@ data class UpdateIngredientParams(
     val ingredientIndex: Int
 )
 
-data class RecipeForDay(
-    val recipe: Recipe?,
-    val date: LocalDate
-)
-
 sealed class DashboardViewState {
     object Loading : DashboardViewState()
     data class Loaded(
         val recipesForWeek: SnapshotStateList<RecipeForDay>,
         val cuisines: SnapshotStateList<Pair<LocalDate, String?>>,
-        val todaysIndex: Int
+        val todaysIndex: Int,
     ) : DashboardViewState()
 }

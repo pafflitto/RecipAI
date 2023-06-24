@@ -10,6 +10,11 @@ val LocalDate.startOfWeek: LocalDate get() {
     return this.minus(dayOfWeek.value, DateTimeUnit.DAY)
 }
 
+val LocalDate.endOfWeek: LocalDate get() {
+    if (dayOfWeek.value == 6) return this
+    return this.plus(6 - dayOfWeek.value, DateTimeUnit.DAY)
+}
+
 val LocalDate.daysInWeek: List<LocalDate> get() {
     val startOfWeek = startOfWeek
     val days = mutableListOf<LocalDate>()

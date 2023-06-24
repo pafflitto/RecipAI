@@ -83,8 +83,8 @@ fun RecipeSection(
         RecipePager(
             modifier = Modifier
                 .weight(1f),
+            dashboardState = state,
             selectedPage = selectedIndex,
-            recipesForWeek = state.recipesForWeek,
             toggleIngredientStock = toggleIngredientStock,
             pageChange = {
                 closeBottomSheet()
