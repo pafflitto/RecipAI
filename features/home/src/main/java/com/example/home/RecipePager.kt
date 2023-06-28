@@ -29,6 +29,7 @@ import kotlinx.datetime.LocalDate
 @Composable
 fun RecipePager(
     dashboardState: DashboardViewState.Loaded,
+    pagerState: PagerState,
     modifier: Modifier,
     selectedPage: Int,
     toggleIngredientStock: (UpdateIngredientParams) -> Unit,
@@ -39,16 +40,15 @@ fun RecipePager(
 ) {
     val recipesForWeek = dashboardState.recipesForWeek
     val scope = rememberCoroutineScope()
-    val state = rememberPagerState(selectedPage)
 
     LaunchedEffect(selectedPage) {
-        if (selectedPage != state.currentPage) {
-            state.animateScrollToPage(selectedPage)
+        if (selectedPage != pagerState.currentPage) {
+            pagerState.animateScrollToPage(selectedPage)
         }
     }
 
     LaunchedEffect(Unit) {
-        snapshotFlow { state.settledPage }.collect {
+        snapshotFlow { pagerState.settledPage }.collect {
             pageChange(it)
             launch {
                 val recipeForDay = recipesForWeek[it]
@@ -61,13 +61,13 @@ fun RecipePager(
 
     HorizontalPager(
         modifier = modifier,
-        state = state,
+        state = pagerState,
         pageCount = recipesForWeek.size,
         pageSpacing = 16.dp,
         beyondBoundsPageCount = 1
     ) { page ->
         val recipeForDay = recipesForWeek[page]
-        val pageOffset = state.calculateCurrentOffsetForPage(page)
+        val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
         val recipe = recipeForDay.recipe
         if (recipe != null) {
             RecipePage(

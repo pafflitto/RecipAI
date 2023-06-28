@@ -3,6 +3,7 @@ package com.example.home
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,11 +32,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
+
+data class DayLayoutInfo(
+    val width: Int,
+    val position: Int
+) {
+    companion object {
+        val None = DayLayoutInfo(0, 0)
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,16 +55,24 @@ fun DayPicker(
     state: DashboardViewState.Loaded,
     listState: LazyListState,
     selectedIndex: Int,
-    itemWidths: SnapshotStateList<Int>,
-    moveItemToCenter: (Int, Int) -> Unit
+    itemLayoutInfo: SnapshotStateList<DayLayoutInfo>,
+    moveItemToCenter: (Int) -> Unit
 ) {
+    val density = LocalDensity.current
+    val halfScreenWidth = LocalConfiguration.current.screenWidthDp.dp / 2
     LazyRow(
         state = listState,
-        contentPadding = PaddingValues(vertical = 16.dp, horizontal = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.onPlaced {
-            it.size.height
-        }
+        contentPadding = PaddingValues(
+            start = halfScreenWidth - with(density) {
+                itemLayoutInfo.first().width.toDp()
+            },
+            top = 16.dp,
+            end = halfScreenWidth - with(density) {
+                itemLayoutInfo.last().width.toDp()
+            },
+            bottom = 16.dp
+        ),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         itemsIndexed(state.cuisines) { index, cuisineForDay ->
             val transition = updateTransition(
@@ -82,18 +102,31 @@ fun DayPicker(
                 }
             }
 
+            val outlineColor by transition.animateColor(
+                transitionSpec = { tween(durationMillis = 400, delayMillis = 200) },
+                label = "Day Outline Color"
+            ) {
+                if (it) Color.Transparent else MaterialTheme.colorScheme.outline
+            }
+
             val (date, cuisine) = cuisineForDay
             OutlinedCard(
                 shape = CircleShape,
-                modifier = Modifier
-                    .onSizeChanged {
-                        itemWidths[index] = it.width
-                    },
+                modifier = Modifier.onPlaced {
+                    if (itemLayoutInfo[index] == DayLayoutInfo.None) {
+                        itemLayoutInfo[index] = DayLayoutInfo(
+                            width = it.size.width / 2,
+                            position = (it.positionInParent().x + it.size.width / 2).toInt()
+                        )
+                    }
+                },
                 colors = CardDefaults.outlinedCardColors(
-                    containerColor = filledInDayColor
+                    containerColor = filledInDayColor,
+
                 ),
+                border = BorderStroke(1.dp, outlineColor),
                 onClick = {
-                    moveItemToCenter(index, itemWidths[index])
+                    moveItemToCenter(index)
                 }
             ) {
                 Row(

@@ -5,22 +5,24 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.home.bottomSheets.BottomSheetContentState
-import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -48,6 +50,7 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecipeSection(
     state: DashboardViewState.Loaded,
@@ -56,18 +59,43 @@ fun RecipeSection(
     openBottomSheet: () -> Unit,
     closeBottomSheet: () -> Unit
 ) {
-    val itemWidths = remember { mutableStateListOf(0, 0, 0, 0, 0, 0, 0) }
+    val itemLayoutInfo = remember {
+        List(7) { DayLayoutInfo.None }.toMutableStateList()
+    }
     val listState = rememberLazyListState(state.todaysIndex)
     var selectedIndex by remember { mutableStateOf(state.todaysIndex) }
-    val density = LocalDensity.current
-    val centerOffset = with(density) {
-        -LocalConfiguration.current.screenWidthDp.dp.roundToPx() / 2
-    }
-    val scope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(selectedIndex)
+    val pagerDragged by pagerState.interactionSource.collectIsDraggedAsState()
 
-    fun moveItemToCenter(index: Int, itemWidth: Int) = scope.launch {
-        selectedIndex = index
-        listState.animateScrollToItem(selectedIndex, centerOffset + itemWidth / 2)
+    LaunchedEffect(pagerDragged) {
+        var totalAmountScrolled = 0f
+        snapshotFlow {
+            pagerState.calculateCurrentOffsetForPage(pagerState.settledPage)
+        }.collect {
+            val itemScrollingTo = when {
+                pagerState.settledPage == 0 && it < 0 -> 0
+                pagerState.settledPage == 6 && it > 0 -> 6
+                it > 0 -> pagerState.settledPage + 1
+                else -> pagerState.settledPage - 1
+            }
+            when {
+                pagerDragged -> {
+                    val distanceToItem =
+                        itemLayoutInfo[itemScrollingTo].position - itemLayoutInfo[pagerState.settledPage].position
+                    val scrollAmount = (abs(it) * distanceToItem) - totalAmountScrolled
+                    listState.scrollBy(scrollAmount)
+                    totalAmountScrolled += scrollAmount
+                }
+                selectedIndex != pagerState.settledPage -> {
+                    // Day clicked on
+                    listState.animateScrollToItem(selectedIndex)
+                }
+                pagerState.settledPage != pagerState.targetPage -> {
+                    // Finished drag
+                    listState.animateScrollToItem(pagerState.targetPage)
+                }
+            }
+        }
     }
 
     Column {
@@ -75,20 +103,20 @@ fun RecipeSection(
             state = state,
             listState = listState,
             selectedIndex = selectedIndex,
-            itemWidths = itemWidths,
-            moveItemToCenter = { index, itemWidth ->
-                moveItemToCenter(index, itemWidth)
+            itemLayoutInfo = itemLayoutInfo,
+            moveItemToCenter = { index ->
+                selectedIndex = index
             }
         )
         RecipePager(
-            modifier = Modifier
-                .weight(1f),
+            modifier = Modifier.weight(1f),
             dashboardState = state,
+            pagerState = pagerState,
             selectedPage = selectedIndex,
             toggleIngredientStock = toggleIngredientStock,
             pageChange = {
+                selectedIndex = it
                 closeBottomSheet()
-                moveItemToCenter(it, itemWidths[it])
             },
             openBottomSheet = openBottomSheet,
             setBottomSheetContent = setBottomSheetContent

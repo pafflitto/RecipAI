@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
             }
             RecipAiTheme {
                 BottomSheetScaffold(
-                    modifier = Modifier.systemBarsPadding(),
+                    modifier = Modifier.statusBarsPadding(),
                     scaffoldState = scaffoldState,
                     sheetPeekHeight = 0.dp,
                     sheetContainerColor = MaterialTheme.colorScheme.secondaryContainer,

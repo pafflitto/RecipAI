@@ -18,6 +18,7 @@ import com.example.home.bottomSheets.BottomSheetContentState.Loading
 import com.example.home.bottomSheets.BottomSheetContentState.None
 import com.example.home.bottomSheets.BottomSheetContentState.RecipeGenerationEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -57,8 +58,13 @@ class HomeViewModel @Inject constructor(
 
     fun toggleIngredientInPantry(toggleParams: UpdateIngredientParams) = viewModelScope.launchInBackground {
         val loadedState = dashboardState as DashboardViewState.Loaded
-        loadedState.recipesForWeek[toggleParams.recipeIndex].recipe?.ingredients?.get(toggleParams.ingredientIndex)?.let {
+        val recipe = loadedState.recipesForWeek[toggleParams.recipeIndex].recipe
+        recipe?.ingredients?.get(toggleParams.ingredientIndex)?.let {
             it.inPantry.value = !it.inPantry.value
+
+            launch {
+                recipeRepo.updateRecipe(recipe)
+            }
         }
     }
 

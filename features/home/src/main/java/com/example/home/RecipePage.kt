@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -70,7 +71,7 @@ fun RecipePage(
     val animatedOffset by animateFloatAsState(targetValue = pageOffset)
 
     Column(
-        Modifier.offset(y = (LocalConfiguration.current.screenHeightDp.dp / 5) * animatedOffset.absoluteValue)
+        Modifier.offset(y = (LocalConfiguration.current.screenHeightDp.dp * 0.05f) * animatedOffset.absoluteValue)
     ) {
         PageHeader(
             selected = selected,
@@ -142,7 +143,8 @@ private fun InteractionCards(
                     )
                 )
                 .fillMaxWidth()
-                .padding(bottom = 16.dp, top = 40.dp)
+                .navigationBarsPadding()
+                .padding(bottom = 8.dp, top = 32.dp)
         ) {
             FilledTonalButton(
                 colors = ButtonDefaults.filledTonalButtonColors(

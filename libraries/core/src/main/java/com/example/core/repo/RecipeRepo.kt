@@ -11,6 +11,8 @@ import kotlinx.datetime.LocalDate
 interface RecipeRepo {
     suspend fun getRecipesForWeek(date: LocalDate): List<RecipeForDay>
     suspend fun saveRecipeForDay(recipe: Recipe, date: LocalDate)
+
+    suspend fun updateRecipe(recipe: Recipe)
 }
 
 class RecipeRepoImpl(
@@ -32,6 +34,10 @@ class RecipeRepoImpl(
                 recipe.name
             )
         )
+    }
+
+    override suspend fun updateRecipe(recipe: Recipe) {
+        recipeDao.updateRecipe(recipe)
     }
 
     private fun RecipeForDayCombination.toRecipeForDay() = RecipeForDay(

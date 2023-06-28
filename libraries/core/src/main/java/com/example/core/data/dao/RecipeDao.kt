@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.example.core.data.Recipe
 import com.example.core.data.RecipeForDayCombination
 import com.example.core.data.RecipeNameForDay
@@ -19,6 +20,9 @@ abstract class RecipeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun saveRecipe(recipe: Recipe)
+
+    @Update
+    abstract fun updateRecipe(recipe: Recipe)
 
     @Insert
     abstract fun saveRecipeForDay(recipeNameForDay: RecipeNameForDay)
