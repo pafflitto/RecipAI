@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.CardDefaults
@@ -81,7 +82,7 @@ fun DayPicker(
             )
 
             val filledInDayColor by transition.animateColor(
-                transitionSpec = { tween(durationMillis = 400, delayMillis = 200) },
+                transitionSpec = { tween(durationMillis = 400) },
                 label = "Day Background Color"
             ) {
                 if (it) {
@@ -92,7 +93,7 @@ fun DayPicker(
             }
 
             val dayTextColor by transition.animateColor(
-                transitionSpec = { tween(durationMillis = 400, delayMillis = 200) },
+                transitionSpec = { tween(durationMillis = 400) },
                 label = "Day Text Color"
             ) {
                 if (it) {
@@ -103,7 +104,7 @@ fun DayPicker(
             }
 
             val outlineColor by transition.animateColor(
-                transitionSpec = { tween(durationMillis = 400, delayMillis = 200) },
+                transitionSpec = { tween(durationMillis = 400) },
                 label = "Day Outline Color"
             ) {
                 if (it) Color.Transparent else MaterialTheme.colorScheme.outline
@@ -113,12 +114,10 @@ fun DayPicker(
             OutlinedCard(
                 shape = CircleShape,
                 modifier = Modifier.onPlaced {
-                    if (itemLayoutInfo[index] == DayLayoutInfo.None) {
-                        itemLayoutInfo[index] = DayLayoutInfo(
-                            width = it.size.width / 2,
-                            position = (it.positionInParent().x + it.size.width / 2).toInt()
-                        )
-                    }
+                    itemLayoutInfo[index] = DayLayoutInfo(
+                        width = it.size.width / 2,
+                        position = (it.positionInParent().x + it.size.width / 2).toInt()
+                    )
                 },
                 colors = CardDefaults.outlinedCardColors(
                     containerColor = filledInDayColor,
