@@ -36,7 +36,7 @@ object Kotlin {
 
 object JetpackCompose {
     // Bom Dependencies
-    const val bom = "androidx.compose:compose-bom:2023.05.01"
+    const val bom = "androidx.compose:compose-bom:2023.06.01"
     const val animation = "androidx.compose.animation:animation"
     const val foundation = "androidx.compose.foundation:foundation"
     const val material = "androidx.compose.material3:material3"
